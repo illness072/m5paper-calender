@@ -1,0 +1,9 @@
+BasedOnStyle: LLVM
+ColumnLimit: 100
+Standard: Cpp11
+AlwaysBreakAfterDefinitionReturnType: true
+BinPackArguments: false
+BinPackParameters: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BreakBeforeBinaryOperators: All
+BreakConstructorInitializersBeforeComma: false

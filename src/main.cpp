@@ -1,0 +1,57 @@
+#include "files.h"
+#include "main_page.h"
+#include <Arduino.h>
+#include <M5EPD.h>
+#include <WiFi.h>
+
+bool wifiStarted = false;
+void
+startWiFi() {
+  if (!wifiStarted) {
+    const char *SSID = "XXXX";
+    const char *PSK = "YYYY";
+    WiFi.begin(SSID, PSK);
+    int retry = 3;
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      retry--;
+      if (retry == 0) {
+        return;
+      }
+    }
+    wifiStarted = true;
+  }
+}
+
+void
+setup() {
+  M5.begin(false, false, false, true, false);
+  Files files;
+  Sensor sensor;
+  Clock clock;
+  Weather weather = Weather::load(files.readWeather());
+
+  // show
+  MainPage mainPage;
+  mainPage.show(sensor, clock, weather);
+
+  // fetch weather & adjust time
+  auto span = clock.getUnixTime() - weather.time();
+  log_d("span: %lu", span);
+  if (span > 3600) {
+    startWiFi();
+    auto newWeather = Weather::fetch();
+    if (newWeather.isValid()) {
+      files.writeWeather(newWeather.json());
+      log_d("dt: %lu", newWeather.time());
+    }
+    log_d("adjust time");
+    clock.adjustTime();
+  }
+
+  delay(1000);
+  M5.shutdown(60);
+}
+
+void
+loop() {}
