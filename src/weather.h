@@ -30,12 +30,9 @@ public:
   }
 
   static Weather
-  fetch() {
-    const String API_KEY = "AAAAAA";
-    const String CITY = "BBBBBB";
-
+  fetch(String apiKey, String city) {
     HTTPClient http;
-    http.begin("http://api.openweathermap.org/data/2.5/weather?q=" + CITY + "&appid=" + API_KEY
+    http.begin("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey
                + "&lang=en&units=metric");
     auto httpCode = http.GET();
     // HTTP header has been send and Server response header has been handled

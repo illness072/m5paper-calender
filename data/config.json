@@ -1,0 +1,10 @@
+{
+    "wifi": {
+        "ssid": "AAAA",
+        "psk": "BBBB"
+    },
+    "weather": {
+        "api_key": "CCCC",
+        "city": "DDDD"
+    }
+}

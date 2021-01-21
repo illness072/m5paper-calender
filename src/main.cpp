@@ -1,16 +1,15 @@
 #include "files.h"
 #include "main_page.h"
+#include "config.h"
 #include <Arduino.h>
 #include <M5EPD.h>
 #include <WiFi.h>
 
 bool wifiStarted = false;
 void
-startWiFi() {
+startWiFi(String ssid, String psk) {
   if (!wifiStarted) {
-    const char *SSID = "XXXX";
-    const char *PSK = "YYYY";
-    WiFi.begin(SSID, PSK);
+    WiFi.begin(ssid.c_str(), psk.c_str());
     int retry = 3;
     while (WiFi.status() != WL_CONNECTED) {
       delay(500);
@@ -27,6 +26,7 @@ void
 setup() {
   M5.begin(false, false, false, true, false);
   Files files;
+  Config config = Config::load(files.readConfig());
   Sensor sensor;
   Clock clock;
   Weather weather = Weather::load(files.readWeather());
@@ -39,8 +39,8 @@ setup() {
   auto span = clock.getUnixTime() - weather.time();
   log_d("span: %lu", span);
   if (span > 3600) {
-    startWiFi();
-    auto newWeather = Weather::fetch();
+    startWiFi(config.ssid(), config.psk());
+    auto newWeather = Weather::fetch(config.apiKey(), config.city());
     if (newWeather.isValid()) {
       files.writeWeather(newWeather.json());
       log_d("dt: %lu", newWeather.time());

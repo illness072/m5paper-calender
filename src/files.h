@@ -20,6 +20,11 @@ public:
     return readFileAsString(SPIFFS, "/weather.json");
   }
 
+  String
+  readConfig() {
+    return readFileAsString(SPIFFS, "/config.json");
+  }
+
 private:
   static String
   readFileAsString(fs::FS &fs, const char *path) {
