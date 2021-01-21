@@ -26,7 +26,7 @@ void
 setup() {
   M5.begin(false, false, false, true, false);
   Files files;
-  Config config = Config::load(files.readConfig());
+  const Config config = Config::load(files.readConfig());
   Sensor sensor;
   Clock clock;
   Weather weather = Weather::load(files.readWeather());

@@ -1,6 +1,7 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
+#include <M5EPD.h>
 #include <Arduino_JSON.h>
 
 class Config {
@@ -9,39 +10,14 @@ class Config {
   String _apiKey;
   String _city;
 
-  Config() {}
-  Config(JSONVar res)
-      : _ssid((const char *)res["wifi"]["ssid"]),
-        _psk((const char *)res["wifi"]["psk"]),
-        _apiKey((const char *)res["weather"]["api_key"]),
-        _city((const char *)res["weather"]["city"]) {}
+  Config(JSONVar res);
 
 public:
-  static Config
-  load(const String &json) {
-    log_d("%s", json.c_str());
-    return Config(JSON.parse(json));
-  }
-
-  String
-  ssid() {
-    return _ssid;
-  }
-
-  String
-  psk() {
-    return _psk;
-  }
-
-  String
-  apiKey() {
-    return _apiKey;
-  }
-
-  String
-  city() {
-    return _city;
-  }
+  static Config load(const String &json);
+  String ssid() const;
+  String psk() const;
+  String apiKey() const;
+  String city() const;
 };
 
 #endif //_CONFIG_H_
